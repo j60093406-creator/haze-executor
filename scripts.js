@@ -1,10 +1,11 @@
-// Haze Executor - Main JavaScript
+// Haze Executor - Roblox Script Executor
 
 class HazeExecutor {
     constructor() {
         this.scripts = this.loadScripts();
         this.currentScript = null;
         this.isExecuting = false;
+        this.gameConnected = false;
         this.init();
     }
 
@@ -12,6 +13,7 @@ class HazeExecutor {
         this.setupEventListeners();
         this.renderScriptsList();
         this.updateEditorStats();
+        this.initializeRobloxConnection();
     }
 
     setupEventListeners() {
@@ -41,31 +43,83 @@ class HazeExecutor {
         });
     }
 
+    initializeRobloxConnection() {
+        // Simular conexão com Roblox
+        setTimeout(() => {
+            this.addConsoleMessage('⚠️ Aguardando injeção no Roblox...', 'warning');
+        }, 1000);
+    }
+
     loadScripts() {
-        const stored = localStorage.getItem('hazeScripts');
+        const stored = localStorage.getItem('hazeRobloxScripts');
         const defaults = [
             {
                 id: 1,
                 name: 'Hello World',
                 description: 'Script simples de teste',
-                code: 'console.log("🟢 Haze Executor iniciado!");'
+                code: 'print("🟢 Haze Executor conectado ao Roblox!")'
             },
             {
                 id: 2,
-                name: 'Sistema Info',
-                description: 'Informações do sistema',
-                code: `console.log("=== SISTEMA INFO ===");
-console.log("Versão: 1.0.0");
-console.log("Status: Online");
-console.log("Tempo: " + new Date().toLocaleTimeString());`
+                name: 'Player Teleport',
+                description: 'Teleportar para um local',
+                code: `local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanootpart = character:WaitForChild("HumanoidRootPart")
+humanootpart.CFrame = CFrame.new(Vector3.new(0, 100, 0))`
             },
             {
                 id: 3,
-                name: 'Teste Loop',
-                description: 'Loop de teste',
-                code: `for (let i = 1; i <= 5; i++) {
-    console.log("✓ Iteração " + i);
-}`
+                name: 'Infinite Jump',
+                description: 'Pulo infinito',
+                code: `local player = game.Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local jumping = false
+
+UserInputService.InputBegan:Connect(function(input, gameProcessed)
+    if gameProcessed then return end
+    if input.KeyCode == Enum.KeyCode.Space then
+        jumping = true
+    end
+end)
+
+UserInputService.InputEnded:Connect(function(input, gameProcessed)
+    if input.KeyCode == Enum.KeyCode.Space then
+        jumping = false
+    end
+end)
+
+local character = player.Character
+local humanoid = character:WaitForChild("Humanoid")
+local rootpart = character:WaitForChild("HumanoidRootPart")
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    if jumping then
+        humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+    end
+end)`
+            },
+            {
+                id: 4,
+                name: 'Speed Boost',
+                description: 'Aumentar velocidade de movimento',
+                code: `local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+humanoid.WalkSpeed = 50`
+            },
+            {
+                id: 5,
+                name: 'God Mode',
+                description: 'Modo deus - invulnerável',
+                code: `local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+
+while true do
+    humanoid.Health = humanoid.MaxHealth
+    wait(0.1)
+end`
             }
         ];
 
@@ -73,7 +127,7 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
     }
 
     saveScripts() {
-        localStorage.setItem('hazeScripts', JSON.stringify(this.scripts));
+        localStorage.setItem('hazeRobloxScripts', JSON.stringify(this.scripts));
     }
 
     renderScriptsList() {
@@ -101,7 +155,7 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
             this.currentScript = script;
             document.getElementById('scriptEditor').value = script.code;
             this.updateEditorStats();
-            this.addConsoleMessage(`Script carregado: ${script.name}`, 'success');
+            this.addConsoleMessage(`✓ Script carregado: ${script.name}`, 'success');
         }
     }
 
@@ -113,8 +167,8 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
         const newScript = {
             id,
             name,
-            description: 'Novo script',
-            code: ''
+            description: 'Novo script Roblox',
+            code: '-- Escreva seu script aqui\nprint("Script iniciado")'
         };
 
         this.scripts.push(newScript);
@@ -135,7 +189,7 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
             this.currentScript = {
                 id,
                 name,
-                description: 'Script salvo',
+                description: 'Script Roblox salvo',
                 code
             };
             this.scripts.push(this.currentScript);
@@ -181,20 +235,23 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
         const code = document.getElementById('scriptEditor').value;
         
         if (!code.trim()) {
-            this.addConsoleMessage('⚠ Nenhum código para executar', 'warning');
+            this.addConsoleMessage('⚠️ Nenhum código para executar', 'warning');
+            return;
+        }
+
+        if (!this.gameConnected) {
+            this.addConsoleMessage('❌ Roblox não está conectado. Injete o executor primeiro!', 'error');
             return;
         }
 
         this.isExecuting = true;
         document.getElementById('executeBtn').disabled = true;
-        this.addConsoleMessage('▶ Executando script...', 'info');
+        this.addConsoleMessage('▶️ Executando script Roblox...', 'info');
 
         try {
-            // Criar um console mock para capturar logs
+            // Simular execução do script
             const logs = [];
             const originalLog = console.log;
-            const originalError = console.error;
-            const originalWarn = console.warn;
 
             console.log = (...args) => {
                 const message = args.map(arg => 
@@ -204,31 +261,16 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
                 this.addConsoleMessage(message, 'success');
             };
 
-            console.error = (...args) => {
-                const message = args.map(arg => String(arg)).join(' ');
-                logs.push({ message, type: 'error' });
-                this.addConsoleMessage('ERROR: ' + message, 'error');
-            };
-
-            console.warn = (...args) => {
-                const message = args.map(arg => String(arg)).join(' ');
-                logs.push({ message, type: 'warn' });
-                this.addConsoleMessage('WARNING: ' + message, 'warning');
-            };
-
-            // Executar script com timeout
+            // Timeout de segurança
             const timeout = setTimeout(() => {
-                throw new Error('Script timeout - execução excedeu 30 segundos');
-            }, 30000);
+                throw new Error('Script timeout - execução excedeu 60 segundos');
+            }, 60000);
 
-            // Executar código
-            eval(code);
+            // Simular execução Lua
+            this.simulateLuaExecution(code);
             clearTimeout(timeout);
 
             console.log = originalLog;
-            console.error = originalError;
-            console.warn = originalWarn;
-
             this.addConsoleMessage('✓ Script executado com sucesso!', 'success');
 
         } catch (error) {
@@ -244,9 +286,25 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
         }
     }
 
+    simulateLuaExecution(code) {
+        // Simular algumas funções Lua básicas
+        const lines = code.split('\n');
+        const printPattern = /print\((.*?)\)/g;
+        
+        lines.forEach(line => {
+            const match = line.match(printPattern);
+            if (match) {
+                match.forEach(m => {
+                    const content = m.replace('print(', '').replace(')', '').replace(/"/g, '').replace(/'/g, '');
+                    this.addConsoleMessage('[Lua Output] ' + content, 'success');
+                });
+            }
+        });
+    }
+
     stopExecution() {
         this.isExecuting = false;
-        this.addConsoleMessage('⏹ Execução parada', 'warning');
+        this.addConsoleMessage('⏹️ Execução parada', 'warning');
     }
 
     updateEditorStats() {
@@ -261,12 +319,29 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
     }
 
     addConsoleMessage(message, type = 'info') {
-        const console = document.getElementById('console');
+        const consoleElement = document.getElementById('console');
         const messageEl = document.createElement('div');
         messageEl.className = `console-message ${type}`;
         messageEl.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-        console.appendChild(messageEl);
-        console.scrollTop = console.scrollHeight;
+        consoleElement.appendChild(messageEl);
+        consoleElement.scrollTop = consoleElement.scrollHeight;
+    }
+
+    setGameStatus(connected) {
+        this.gameConnected = connected;
+        const statusEl = document.getElementById('gameStatus');
+        
+        if (connected) {
+            statusEl.textContent = 'CONECTADO ✓';
+            statusEl.classList.remove('status-disconnected');
+            statusEl.classList.add('status-connected');
+            this.addConsoleMessage('✓ Roblox conectado com sucesso!', 'success');
+        } else {
+            statusEl.textContent = 'DESCONECTADO ✗';
+            statusEl.classList.remove('status-connected');
+            statusEl.classList.add('status-disconnected');
+            this.addConsoleMessage('✗ Desconectado do Roblox', 'error');
+        }
     }
 }
 
@@ -274,8 +349,9 @@ console.log("Tempo: " + new Date().toLocaleTimeString());`
 let executor;
 document.addEventListener('DOMContentLoaded', () => {
     executor = new HazeExecutor();
-    executor.addConsoleMessage('🟢 Haze Executor v1.0.0 iniciado', 'success');
-    executor.addConsoleMessage('Pronto para executar scripts', 'info');
+    executor.addConsoleMessage('🟢 HAZE EXECUTOR v1.0.0 - Roblox Script Executor', 'success');
+    executor.addConsoleMessage('Aguardando injeção no Roblox...', 'info');
+    executor.addConsoleMessage('Biblioteca de scripts carregada', 'info');
 });
 
 // Impedir fechar sem avisar se houver mudanças
