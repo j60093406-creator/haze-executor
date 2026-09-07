@@ -340,6 +340,63 @@ body {
     letter-spacing: 2px;
 }
 
+/* Game Status */
+.game-status {
+    background-color: #0a0a0a;
+    border: 1px solid #00aa00;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.status-label {
+    color: #00aa00;
+    font-size: 0.8em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.status-bar {
+    width: 100%;
+    height: 30px;
+    background-color: #000;
+    border: 1px solid #00aa00;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+#gameStatus {
+    flex: 1;
+    text-align: center;
+    font-weight: bold;
+    font-size: 0.85em;
+    padding: 5px;
+}
+
+.status-disconnected {
+    background-color: #660000;
+    color: #ff5555;
+    border-right: 2px solid #ff5555;
+}
+
+.status-connected {
+    background: linear-gradient(90deg, #006600, #00aa00);
+    color: #00ff00;
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3);
+    animation: statusGlow 2s infinite;
+}
+
+@keyframes statusGlow {
+    0%, 100% {
+        box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3);
+    }
+    50% {
+        box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.6);
+    }
+}
+
 .execution-buttons {
     display: flex;
     flex-direction: column;
@@ -371,6 +428,13 @@ body {
     background-color: #00ff00;
     box-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
     transform: scale(1.05);
+}
+
+.btn-execute:disabled {
+    background-color: #003300;
+    color: #006600;
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .btn-stop {
