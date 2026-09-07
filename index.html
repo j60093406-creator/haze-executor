@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haze Executor - Script Executor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">
+                <h1>HAZE EXECUTOR</h1>
+                <p class="subtitle">Advanced Script Execution Platform</p>
+            </div>
+            <div class="header-status">
+                <div class="status-indicator online"></div>
+                <span>Online</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Sidebar - Script Search -->
+            <div class="sidebar-left">
+                <div class="search-section">
+                    <h2>PESQUISAR SCRIPTS</h2>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Digite para pesquisar...">
+                        <button class="search-btn">🔍</button>
+                    </div>
+                </div>
+
+                <!-- Scripts List -->
+                <div class="scripts-list">
+                    <div class="scripts-header">
+                        <h3>Biblioteca de Scripts</h3>
+                        <span class="script-count">0</span>
+                    </div>
+                    <div id="scriptsList" class="scripts-container">
+                        <div class="no-scripts">Nenhum script disponível</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center - Editor -->
+            <div class="editor-section">
+                <div class="editor-header">
+                    <h2>EDITOR DE SCRIPTS</h2>
+                    <div class="editor-controls">
+                        <button class="btn-control btn-new" title="Novo Script">📄</button>
+                        <button class="btn-control btn-save" title="Salvar Script">💾</button>
+                        <button class="btn-control btn-clear" title="Limpar">🗑️</button>
+                    </div>
+                </div>
+                
+                <textarea id="scriptEditor" class="script-editor" placeholder="Escreva ou cole seu script aqui..."></textarea>
+
+                <!-- Script Info -->
+                <div class="script-info">
+                    <div class="info-item">
+                        <span class="info-label">Linhas:</span>
+                        <span id="lineCount" class="info-value">0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Caracteres:</span>
+                        <span id="charCount" class="info-value">0</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Tamanho:</span>
+                        <span id="sizeCount" class="info-value">0 KB</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar - Execution -->
+            <div class="sidebar-right">
+                <div class="execution-section">
+                    <h2>EXECUTAR</h2>
+                    
+                    <div class="execution-buttons">
+                        <button id="executeBtn" class="btn-execute">
+                            <span class="btn-icon">▶</span>
+                            Executar Script
+                        </button>
+                        <button id="stopBtn" class="btn-stop">
+                            <span class="btn-icon">⏹</span>
+                            Parar
+                        </button>
+                    </div>
+
+                    <div class="options-section">
+                        <h3>Opções</h3>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="autoSave" checked>
+                            Auto-save
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="syntaxHighlight" checked>
+                            Syntax Highlight
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="debugMode">
+                            Debug Mode
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Console Output -->
+                <div class="console-section">
+                    <h3>CONSOLE</h3>
+                    <div id="console" class="console-output">
+                        <div class="console-message info">Console iniciado...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-info">
+                <span>Version 1.0.0</span>
+                <span>|</span>
+                <span>Haze Executor © 2024</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
